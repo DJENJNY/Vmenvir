@@ -19,7 +19,10 @@ sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plug
 
 docker pull nginx
 
-docker run --name nginx-container -p 8080:80 -d nginx
+docker run --name nginx-container1 -p 8080:80 -d nginx
+
+docker run --name loki -d -v /vagrant:/mnt/config -p 3100:3100 grafana/loki:3.4.1 -config.file=/mnt/config/loki-local-config.yaml
+docker run --name promtail -d -v /vagrant:/mnt/config -v /var/log:/var/log --link loki grafana/promtail:3.4.1 -config.file=/mnt/config/promtail-docker-config.yaml
 
 
 echo "bootstrap completed"
