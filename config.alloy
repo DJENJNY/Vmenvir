@@ -1,0 +1,28 @@
+logging {
+  level  = "info"
+  format = "logfmt"
+}
+
+// config.alloy
+
+local.file_match "host_logs" {
+  path_targets = [
+    {"__path__" = "/host/var/log/syslog"},
+    {"__path__" = "/host/var/log/**/*.log"},
+    ]
+}
+
+loki.source.file "files" {
+  targets    = local.file_match.host_logs.targets
+  forward_to = [loki.write.to_loki.receiver]
+}
+
+loki.write "to_loki" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+
+  
+}
+
+
