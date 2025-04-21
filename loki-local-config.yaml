@@ -1,8 +1,11 @@
+target: "all"
+
 auth_enabled: false
 
 server:
   http_listen_port: 3100
   log_level: debug
+  http_server_read_timeout: 600s
   
 
 common:
@@ -16,6 +19,7 @@ common:
   ring:
     kvstore:
       store: inmemory
+
 
 query_range:
   results_cache:

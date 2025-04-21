@@ -14,6 +14,7 @@ local.file_match "host_logs" {
 
 loki.source.file "files" {
   targets    = local.file_match.host_logs.targets
+  
   forward_to = [loki.write.to_loki.receiver]
 }
 
