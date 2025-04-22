@@ -1,11 +1,17 @@
 target: "all"
 
 auth_enabled: false
+ingester_client:
+  remote_timeout: 10s
 
 server:
   http_listen_port: 3100
   log_level: debug
+  grpc_server_max_recv_msg_size: 1.048576e+08
+  grpc_server_max_send_msg_size: 1.048576e+08
   http_server_read_timeout: 600s
+  http_server_write_timeout: 600s
+  
   
 
 common:

@@ -18,12 +18,29 @@ loki.source.file "files" {
   forward_to = [loki.write.to_loki.receiver]
 }
 
+
 loki.write "to_loki" {
   endpoint {
     url = "http://loki:3100/loki/api/v1/push"
   }
 
   
+}
+
+prometheus.remote_write "default" {
+  endpoint {
+    url = "http://localhost:9090/api/prom/push"
+  }
+
+}
+
+prometheus.scrape "example" {
+  // Collect metrics from the default listen address.
+  targets = [{
+    __address__ = "127.0.0.1:12345",
+  }]
+
+  forward_to = [prometheus.remote_write.default.receiver]
 }
 
 

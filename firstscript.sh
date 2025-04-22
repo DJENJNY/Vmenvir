@@ -21,9 +21,11 @@ docker pull nginx
 
 docker run --name nginx-container1 -p 8080:80 -d nginx
 
-docker run --name loki  -d -v /vagrant:/mnt/config -p 3100:3100 grafana/loki:3.4.1 -config.file=/mnt/config/loki-local-config.yaml
+docker compose -f /vagrant/docker-compose.yml up -d
 
-docker run -d --name=alloy -p 12345:12345 --link loki -v /var/log:/host/var/log:ro -v /proc:/host/proc:ro -v /sys:/host/sys:ro -v /vagrant/config.alloy:/etc/alloy/config.alloy:ro grafana/alloy:latest run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy
+# docker run --name loki  -d -v /vagrant:/mnt/config -p 3100:3100 grafana/loki:3.4.1 -config.file=/mnt/config/loki-local-config.yaml
+
+# docker run -d --name=alloy -p 12345:12345 --link loki -v /var/log:/host/var/log:ro -v /proc:/host/proc:ro -v /sys:/host/sys:ro -v /vagrant/config.alloy:/etc/alloy/config.alloy:ro grafana/alloy:latest run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy
 
 
 
