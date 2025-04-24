@@ -26,3 +26,10 @@
        - "9090:9090"
      volumes:
        - /vagrant/prometheus.yml:/etc/prometheus/prometheus.yml
+   nginx:
+     image: nginx:latest 
+     ports:
+       - "8080:80"  
+       - "443:443" 
+     volumes:
+       - /var/log/nginx:/var/log/nginx 
