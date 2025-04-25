@@ -1,35 +1,61 @@
-  services:
-   loki:
-     image: grafana/loki:3.4.1
-     ports:
-       - "3100:3100"
-     volumes: 
-       - /vagrant:/mnt/config
-     command: 
-       - --config.file=/mnt/config/loki-local-config.yaml
-   alloy:
-     image: grafana/alloy:latest
-     ports:
-       - "12345:12345"
-     volumes:
-       - /var/log:/host/var/log:ro
-       - /proc:/host/proc:ro
-       - /sys:/host/sys:ro
-       - /vagrant/config.alloy:/etc/alloy/config.alloy:ro 
-     command: 'run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy'
-   prometheus:
-     image: prom/prometheus:v2.47.0
-     command:
-       - --web.enable-remote-write-receiver
-       - --config.file=/etc/prometheus/prometheus.yml
-     ports:
-       - "9090:9090"
-     volumes:
-       - /vagrant/prometheus.yml:/etc/prometheus/prometheus.yml
-   nginx:
-     image: nginx:latest 
-     ports:
-       - "8080:80"  
-       - "443:443" 
-     volumes:
-       - /var/log/nginx:/var/log/nginx 
+networks:
+  host-monitoring: 
+  
+services:
+  loki:
+    image: grafana/loki:3.4.1
+    ports:
+      - "3100:3100"
+    volumes: 
+      - /vagrant:/mnt/config
+    command: 
+      - --config.file=/mnt/config/loki-local-config.yaml
+  alloy:
+    image: grafana/alloy:latest
+    ports:
+      - "12345:12345"
+    volumes:
+      - /var/log:/host/var/log:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /vagrant/config.alloy:/etc/alloy/config.alloy:ro 
+    command: 'run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy'
+  prometheus:
+    image: prom/prometheus:v2.47.0
+    command:
+      - --web.enable-remote-write-receiver
+      - --config.file=/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    volumes:
+      - /vagrant/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - host-monitoring
+  nginx:
+    image: nginx:latest 
+    ports:
+      - "8080:80"  
+      - "443:443" 
+    volumes:
+      - /var/log/nginx:/var/log/nginx 
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - --path.procfs=/host/proc
+      - --path.rootfs=/rootfs
+      - --path.sysfs=/host/sys
+      - --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)
+    ports:
+      - 9100:9100
+    networks:
+      - host-monitoring
+
+
+
+

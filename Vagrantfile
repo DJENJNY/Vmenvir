@@ -13,6 +13,7 @@ Vagrant.configure("2") do |config|
     server.vm.network "forwarded_port", guest: 3100, host: 3100
     server.vm.network "forwarded_port", guest: 12345, host: 12345
     server.vm.network "forwarded_port", guest: 9090, host: 9090
+    server.vm.network "forwarded_port", guest: 9100, host: 9100
     server.vm.hostname = "server"
     server.vm.network "private_network", ip: "192.168.56.10"
   end
@@ -22,6 +23,6 @@ Vagrant.configure("2") do |config|
     client.vm.provision "shell", path: "server.sh"
     client.vm.hostname = "client"
     client.vm.network "private_network", ip: "192.168.56.33"
-    
   end
+
 end
