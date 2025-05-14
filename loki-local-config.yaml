@@ -36,6 +36,12 @@ query_range:
 
 limits_config:
   metric_aggregation_enabled: true
+  retention_period: 72h
+  max_query_lookback: 72h
+
+table_manager:
+  retention_deletes_enabled: true
+  retention_period: 72h
 
 schema_config:
   configs:

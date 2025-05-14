@@ -8,6 +8,7 @@ services:
       - "3100:3100"
     volumes: 
       - /vagrant:/mnt/config
+      - /loki-data:/loki
     command: 
       - --config.file=/mnt/config/loki-local-config.yaml
   alloy:
@@ -25,12 +26,15 @@ services:
     command:
       - --web.enable-remote-write-receiver
       - --config.file=/etc/prometheus/prometheus.yml
+      - '--storage.tsdb.retention.time=7d'
+      - '--storage.tsdb.path=/prometheus'
     ports:
       - "9090:9090"
     volumes:
+      - prometheus_data:/prometheus
       - /vagrant/prometheus.yml:/etc/prometheus/prometheus.yml
     networks:
-      - host-monitoring
+      - host-monitoring     
   nginx:
     image: nginx:latest 
     ports:
@@ -55,6 +59,9 @@ services:
       - 9100:9100
     networks:
       - host-monitoring
+volumes:
+  prometheus_data:
+  loki_data:
 
 
 
